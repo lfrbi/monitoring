@@ -1,0 +1,36 @@
+version: '3'
+
+volumes:
+  prometheus_data:
+    driver: local
+
+  grafana_data:
+    driver: local  
+
+networks:
+  monitoring:
+    driver: bridge
+
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    restart: unless-stopped
+    volumes:
+      - 'prometheus_data:/prometheus'
+      - './config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
+    networks:
+      - monitoring
+    ports:
+      - 9090:9090
+
+  snmp-exporter:
+    container_name: snmp-exporter
+    image: prom/snmp-exporter
+    restart: unless-stopped
+    networks:
+      - monitoring
+    ports:
+      - "9116:9116"        # Expose HTTP metrics port for Prometheus
+      - "161:161/udp"      # Expose SNMP port (UDP)
+
