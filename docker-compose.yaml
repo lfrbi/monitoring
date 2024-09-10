@@ -34,3 +34,14 @@ services:
       - "9116:9116"        # Expose HTTP metrics port for Prometheus
       - "161:161/udp"      # Expose SNMP port (UDP)
 
+  grafana:  
+      image: grafana/grafana  
+      container_name: grafana  
+      ports:  
+        - "3000:3000"  
+      restart: unless-stopped  
+      environment:  
+        - GF_SECURITY_ADMIN_USER=admin  
+        - GF_SECURITY_ADMIN_PASSWORD=admin  
+      volumes:  
+        - /etc/grafana:/etc/grafana/provisioning/datasource
